@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { useAuthStore } from '@/store/authStore';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const rawApiUrl = (import.meta as any).env?.VITE_API_URL || 'http://localhost:5000';
+// Strip trailing slash if present
+const API_URL = rawApiUrl.replace(/\/+$/, '');
 
 /**
  * Axios instance with automatic JWT refresh interceptor.
