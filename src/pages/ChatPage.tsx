@@ -76,7 +76,7 @@ export default function ChatPage() {
     queryKey: ['messages', activeSessionId],
     queryFn: () => chatApi.getMessages(activeSessionId!).then((r) => r.data),
     enabled: !!activeSessionId,
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       setMessages(data.messages || []);
       // Restore extracted data from last assistant message
       const lastExtracted = [...(data.messages || [])].reverse().find(
@@ -157,13 +157,13 @@ export default function ChatPage() {
 
     try {
       // Store message on server
-      await sendMessageMutation.mutateAsync({ sessionId, content });
+      await sendMessageMutation.mutateAsync({ sessionId: sessionId!, content });
 
       // Run AI extraction
       setIsExtracting(true);
       const history = [...messages, userMsg].map((m) => ({ role: m.role, content: m.content }));
 
-      const extractRes = await aiApi.extractTravelData(sessionId, history);
+      const extractRes = await aiApi.extractTravelData(sessionId!, history);
       const { extracted, isMock, isFallback } = extractRes.data;
       setExtractedData(extracted);
 
