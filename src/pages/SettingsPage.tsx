@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
   User, Crown, Moon, Sun, Bell, Lock, Trash2, CreditCard, LogOut,
-  CheckCircle2, AlertTriangle, ExternalLink, Eye, EyeOff
+  CheckCircle2, AlertTriangle, ExternalLink, Eye, EyeOff, MessageSquarePlus
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useMutation } from '@tanstack/react-query';
@@ -14,6 +14,7 @@ import { useUIStore } from '@/store/uiStore';
 import { authApi, stripeApi } from '@/services/api';
 import Navbar from '@/components/Navbar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import FeedbackModal from '@/components/FeedbackModal';
 import { cn } from '@/lib/utils';
 
 const passwordSchema = z
@@ -39,6 +40,7 @@ export default function SettingsPage() {
   const navigate = useNavigate();
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [showPw, setShowPw] = useState<Record<string, boolean>>({});
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const togglePw = (field: string) => setShowPw((prev) => ({ ...prev, [field]: !prev[field] }));
 
@@ -203,6 +205,26 @@ export default function SettingsPage() {
               {isSubmitting ? <LoadingSpinner size="sm" /> : 'Update password'}
             </button>
           </form>
+        </SettingsSection>
+
+        {/* Feedback */}
+        <SettingsSection title="Feedback" icon={<MessageSquarePlus className="h-5 w-5" />}>
+          <div className="flex items-start gap-4">
+            <div className="flex-1">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Share your thoughts, report bugs, or request new features. We read every message and use your feedback to improve VibeVoyage.
+              </p>
+            </div>
+          </div>
+          <button
+            id="settings-open-feedback"
+            onClick={() => setFeedbackOpen(true)}
+            className="btn-brand mt-4 gap-2 py-2.5 text-sm"
+          >
+            <MessageSquarePlus className="h-4 w-4" />
+            Give Feedback
+          </button>
+          <FeedbackModal open={feedbackOpen} onOpenChange={setFeedbackOpen} />
         </SettingsSection>
 
         {/* Account actions */}

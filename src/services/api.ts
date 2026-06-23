@@ -140,3 +140,12 @@ export const stripeApi = {
   createCheckout: (plan: 'monthly' | 'annual') =>
     api.post('/stripe/create-checkout-session', { plan }),
 };
+
+// ─── Feedback API ─────────────────────────────────────────────────────────
+export const feedbackApi = {
+  submit: (data: {
+    message: string;
+    rating: number;
+    category: 'UI/UX' | 'Bug' | 'Feature Request' | 'Other';
+  }) => api.post('/feedback', data),
+};

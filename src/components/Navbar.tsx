@@ -1,16 +1,19 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Moon, Sun, LogOut, Settings, LayoutDashboard, Map, MessageSquare, Crown } from 'lucide-react';
+import { Moon, Sun, LogOut, Settings, Map, MessageSquare, Crown, MessageSquarePlus } from 'lucide-react';
+import { useState } from 'react';
 import { useAuthStore } from '@/store/authStore';
 import { useUIStore } from '@/store/uiStore';
 import { authApi } from '@/services/api';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import FeedbackModal from '@/components/FeedbackModal';
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuthStore();
   const { darkMode, toggleDarkMode } = useUIStore();
   const navigate = useNavigate();
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -59,6 +62,22 @@ export default function Navbar() {
           >
             {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
+
+          {/* Feedback button — only for authenticated users */}
+          {isAuthenticated && (
+            <>
+              <button
+                id="feedback-trigger-nav"
+                onClick={() => setFeedbackOpen(true)}
+                className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors"
+                aria-label="Give feedback"
+              >
+                <MessageSquarePlus className="h-4 w-4" />
+                Feedback
+              </button>
+              <FeedbackModal open={feedbackOpen} onOpenChange={setFeedbackOpen} />
+            </>
+          )}
 
           {isAuthenticated ? (
             <DropdownMenu.Root>
